@@ -16,25 +16,41 @@ namespace SpotifyApi.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ISpotifyAccountService _spotifyAccountService;
         private readonly IConfiguration _configuration;
+        private readonly ISpotifyService _spotifyService;
         public HomeController(ILogger<HomeController> logger,
-            ISpotifyAccountService spotifyAccountService, IConfiguration configuration)
+            ISpotifyAccountService spotifyAccountService, IConfiguration configuration, ISpotifyService spotifyService)
         {
             _logger = logger;
             _spotifyAccountService = spotifyAccountService;
             _configuration = configuration;
+            _spotifyService = spotifyService;
         }
 
         public async Task<IActionResult> Index()
         {
+            var newReleases = await GetReleases();
+
+            return View(newReleases);
+        }
+
+        private async Task<IEnumerable<Release>> GetReleases()
+        {
             try
             {
-                var token = await _spotifyAccountService.GetToken(_configuration["Spotify:ClientId"], _configuration["Spotify:ClientSecret"]);
+                var token = await _spotifyAccountService.GetToken(
+                    _configuration["Spotify:ClientId"],
+                    _configuration["Spotify:ClientSecret"]);
+
+                var newReleases = await _spotifyService.GetNewReleases("TR", 20, token);
+
+                return newReleases;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Debug.Write(ex);
+
+                return Enumerable.Empty<Release>();
             }
-            return View();
         }
 
         public IActionResult Privacy()

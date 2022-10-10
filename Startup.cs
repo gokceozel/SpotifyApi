@@ -28,6 +28,12 @@ namespace SpotifyApi
             {
                 spotify.BaseAddress = new Uri("https://accounts.spotify.com/api/");
             });
+
+            services.AddHttpClient<ISpotifyService, SpotifyService>(c =>
+            {
+                c.BaseAddress = new Uri("https://api.spotify.com/v1/");
+                c.DefaultRequestHeaders.Add("Accept", "application/.json");
+            });
             services.AddControllersWithViews();
         }
 

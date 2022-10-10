@@ -1,7 +1,6 @@
 ﻿using SpotifyApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -20,7 +19,7 @@ namespace SpotifyApi.Services
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "token");
 
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic" ,Convert.ToBase64String(Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}")));
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}")));
 
             request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
